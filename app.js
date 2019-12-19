@@ -109,19 +109,21 @@ app.get('/add/', function(req, res, err) {
 });
 
 app.post('/add/', function(req, res, err) {
-request.post('https://' + serveraddress + '/api/v0/fighter/add/') 
-  form: {
-    fightername: req.body.fightername,
-    player_name: req.body.player_name
-  }
+  request.post('https://' + serveraddress + '/api/v0/fighter/add/',{
+      form: {
+        fightername: req.body.fightername,
+        player_name: req.body.player_name
+      }
+
+    },
+    function(request_err, request_res, request_body) {
+      if (request_res.statusCode == 201) {
+        res.status(200).redirect("/fighter/" + req.body.fighterID);
+      } else if (request_res.statusCode == 403) {
+        res.status(200).redirect("/fighter/" + req.body.fighterID);
+      } else {
+        res.send("Error!")
+      }
+    })
 }
-}, function(request_err, request_res, request_body) {
-if (request_res.statusCode == 201) {
-  res.status(200).redirect("/fighter/" + req.body.fighterID);
-} else if (request_res.statusCode == 403) {
-  res.status(200).redirect("/fighter/" + req.body.fighterID);
-} else {
-  res.send("Error!")
-}
-})
-});
+);
