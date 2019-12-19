@@ -30,6 +30,7 @@ app.get('/', function(req, res, err) {
 
   request(options, function(request_err, request_res, request_body) {
     let jsonstuff = JSON.parse(request_body)
+    console.log(jsonstuff);
     res.status(200).render('index', {
       gitURL: jsonstuff
     })
@@ -109,21 +110,19 @@ app.get('/add/', function(req, res, err) {
 });
 
 app.post('/add/', function(req, res, err) {
-  request.post('https://' + serveraddress + '/api/v0/fighter/add/',{
-      form: {
-        fightername: req.body.fightername,
-        player_name: req.body.player_name
-      }
-
-    },
-    function(request_err, request_res, request_body) {
-      if (request_res.statusCode == 201) {
-        res.status(200).redirect("/fighter/" + req.body.fighterID);
-      } else if (request_res.statusCode == 403) {
-        res.status(200).redirect("/fighter/" + req.body.fighterID);
-      } else {
-        res.send("Error!")
-      }
-    })
+request.post('https://' + serveraddress + '/api/v0/fighter/add/') ,{
+  form: {
+    fightername: req.body.fightername,
+    player_name: req.body.player_name
+  }
 }
-);
+}, function(request_err, request_res, request_body) {
+if (request_res.statusCode == 201) {
+  res.status(200).redirect("/fighter/" + req.body.fighterID);
+} else if (request_res.statusCode == 403) {
+  res.status(200).redirect("/fighter/" + req.body.fighterID);
+} else {
+  res.send("Error!")
+}
+
+});
